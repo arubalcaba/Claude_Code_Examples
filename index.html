@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOpsMercs - Elite Infrastructure. No BS.</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .tech-text {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .terminal {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .terminal-line {
+            margin: 6px 0;
+            color: #cbd5e1;
+        }
+
+        .terminal-prompt {
+            color: #94a3b8;
+        }
+
+        .terminal-output {
+            color: #06b6d4;
+        }
+
+        .terminal-success {
+            color: #10b981;
+        }
+
+        .terminal-warning {
+            color: #f59e0b;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            border-color: #475569;
+        }
+
+        .card-hover:hover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+            transform: translateY(-4px);
+        }
+
+        .accent-text {
+            color: #10b981;
+        }
+
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #10b981;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #334155;
+        }
+
+        .faq-button {
+            transition: all 0.3s ease;
+            color: #cbd5e1;
+        }
+
+        .faq-button.active {
+            color: #10b981;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-content.open {
+            max-height: 500px;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulse-accent {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 backdrop-blur-sm bg-opacity-95">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <div class="text-2xl font-bold">
+                        <span class="accent-text">Ops</span><span class="text-slate-100">Mercs</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#problem" class="nav-link text-slate-300">Problem</a>
+                    <a href="#approach" class="nav-link text-slate-300">Approach</a>
+                    <a href="#solutions" class="nav-link text-slate-300">Solutions</a>
+                    <a href="#faq" class="nav-link text-slate-300">FAQ</a>
+                </div>
+
+                <!-- CTA Button (Desktop) -->
+                <div class="hidden md:block">
+                    <a href="#cta" class="cta-button px-6 py-2 rounded-lg font-semibold text-white">Book Call</a>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-emerald-400">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-3">
+                <a href="#problem" class="block text-slate-300 hover:text-emerald-400 py-2">Problem</a>
+                <a href="#approach" class="block text-slate-300 hover:text-emerald-400 py-2">Approach</a>
+                <a href="#solutions" class="block text-slate-300 hover:text-emerald-400 py-2">Solutions</a>
+                <a href="#faq" class="block text-slate-300 hover:text-emerald-400 py-2">FAQ</a>
+                <a href="#cta" class="block cta-button px-4 py-2 rounded-lg font-semibold text-white text-center">Book Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-20 pb-24 md:pt-32 md:pb-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Content -->
+                <div>
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                        Stop Drowning in <span class="accent-text">Cloud Complexity</span>.<br>Start Moving at <span class="accent-text">Startup Speed</span>.
+                    </h1>
+
+                    <p class="text-xl text-slate-300 mb-8 leading-relaxed">
+                        Your infrastructure shouldn't slow you down. Let our elite 2-person team fix your AWS mess, stabilize your Kubernetes, and automate the chaos. Fast. Efficient. No BS.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                        <a href="#cta" class="cta-button px-8 py-4 rounded-lg font-bold text-white text-center">Book 30-Min Discovery Call</a>
+                        <a href="#solutions" class="border border-emerald-400 text-emerald-400 px-8 py-4 rounded-lg font-bold text-center hover:bg-emerald-400 hover:text-slate-950 transition">Learn More</a>
+                    </div>
+
+                    <p class="text-sm text-slate-400">✓ Free audit • ✓ No commitment • ✓ Response in 24 hours</p>
+                </div>
+
+                <!-- Right - Terminal Window -->
+                <div class="hidden lg:block">
+                    <div class="terminal pulse-accent">
+                        <div class="mb-4 pb-4 border-b border-slate-700">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">$ </span><span class="terminal-output">terraform apply</span>
+                            </div>
+                            <div class="terminal-line text-slate-500">aws_eks_cluster.main: Modifying...</div>
+                            <div class="terminal-line text-slate-500">aws_rds_instance.db: Creating...</div>
+                            <div class="terminal-line text-slate-500">aws_cloudfront_distribution.cdn: Creating...</div>
+
+                            <div class="terminal-line mt-4 text-slate-500">Apply complete! Resources: 24 added, 3 changed, 0 destroyed.</div>
+                            <div class="terminal-line terminal-success mt-4">
+                                <i class="fas fa-check-circle"></i> Build successful
+                            </div>
+                            <div class="terminal-line terminal-success">
+                                <i class="fas fa-check-circle"></i> Deploy completed in 4m 23s
+                            </div>
+                            <div class="terminal-line terminal-success">
+                                <i class="fas fa-check-circle"></i> Cloud costs reduced 38%
+                            </div>
+                            <div class="terminal-line mt-4 text-slate-500">Time taken: 12 minutes</div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">$ </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem" class="py-20 md:py-32 bg-slate-900 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">
+                You're Stuck in <span class="accent-text">Deployment Hell</span>
+            </h2>
+
+            <p class="text-center text-xl text-slate-300 mb-16 max-w-2xl mx-auto">
+                Every release feels like a gamble. Your infrastructure is fragile. Your team is burned out. Here's why:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Problem Card 1 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-mouse"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Manual Infrastructure</h3>
+                    <p class="text-slate-300">Clicking through AWS consoles. No version control. No repeatability. One person knows how everything works.</p>
+                </div>
+
+                <!-- Problem Card 2 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Kubernetes Chaos</h3>
+                    <p class="text-slate-300">You migrated to EKS to scale, but now your team is fighting YAML configs and pod crashes at 2 AM.</p>
+                </div>
+
+                <!-- Problem Card 3 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cloud Waste</h3>
+                    <p class="text-slate-300">Your AWS bill grows every month. You're paying for resources nobody's monitoring. You don't know why.</p>
+                </div>
+
+                <!-- Problem Card 4 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-hourglass-end"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Slow Deploys</h3>
+                    <p class="text-slate-300">A "simple" change takes 45 minutes. You ship features once a week instead of once a day.</p>
+                </div>
+
+                <!-- Problem Card 5 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Fragile Infrastructure</h3>
+                    <p class="text-slate-300">One bad deployment, and everything goes down. Your incident response is "pray and revert."</p>
+                </div>
+
+                <!-- Problem Card 6 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 accent-text">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">The Hiring Trap</h3>
+                    <p class="text-slate-300">You need DevOps expertise now, not in 3 months. But you can't afford a $250K/year engineer yet.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center">
+                <p class="text-lg text-slate-300">
+                    <strong class="accent-text">This isn't normal.</strong> And it's not your fault. You should focus on product and revenue, not wrestling with infrastructure.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Mercs Approach Section -->
+    <section id="approach" class="py-20 md:py-32 bg-slate-950 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-6">
+                Elite Operators. Not a <span class="accent-text">Bloated Agency</span>.
+            </h2>
+
+            <p class="text-center text-xl text-slate-300 mb-16 max-w-3xl mx-auto">
+                We're not a 50-person DevOps agency. We're a two-person special ops team. Both founders. 15+ years each. No junior consultants. No meetings about meetings.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <!-- Approach Point 1 -->
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">No Meetings About Meetings</h3>
+                        <p class="text-slate-300">We move fast, make decisions, and execute. Your time is valuable. We respect it.</p>
+                    </div>
+                </div>
+
+                <!-- Approach Point 2 -->
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">You Get the Founders</h3>
+                        <p class="text-slate-300">Not a junior consultant. Not a rotating team. Continuity, ownership, and expertise on day one.</p>
+                    </div>
+                </div>
+
+                <!-- Approach Point 3 -->
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">We Execute & Stabilize</h3>
+                        <p class="text-slate-300">We implement, document, train your team, and hand off a rock-solid foundation. We're not here to bill you forever.</p>
+                    </div>
+                </div>
+
+                <!-- Approach Point 4 -->
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Flat Rates. No Surprises.</h3>
+                        <p class="text-slate-300">We quote the work upfront. No hourly billing. No scope creep. You know exactly what you're paying.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border-l-4 border-emerald-500 p-8 rounded">
+                <p class="text-lg text-slate-200">
+                    <strong>Think of us as the SEAL Team 6 of DevOps,</strong> not the defense contractor. We come in, execute high-impact changes, and get your team back to shipping.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 md:py-32 bg-slate-900 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-6">
+                What We <span class="accent-text">Do</span>
+            </h2>
+
+            <p class="text-center text-lg text-slate-300 mb-16 max-w-2xl mx-auto">
+                Three core service buckets. Each designed to solve a specific pain point and move the needle on your business.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Solution 1: EKS -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="mb-6">
+                        <div class="inline-block bg-emerald-500 text-white p-3 rounded-lg">
+                            <i class="fas fa-cube text-2xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Kubernetes & EKS</h3>
+                    <p class="text-slate-300 mb-6">
+                        Your containers are a mess, or you haven't migrated yet and you're paralyzed by the decision.
+                    </p>
+                    <p class="text-slate-400 mb-6">
+                        We handle the full EKS lifecycle: cluster setup, workload migration, autoscaling config, security hardening, and disaster recovery. We don't just lift-and-shift; we optimize for cost and reliability from day one.
+                    </p>
+                    <div class="pt-4 border-t border-slate-700">
+                        <p class="text-emerald-400 font-semibold">
+                            <i class="fas fa-arrow-right"></i> Outcome: Stable, scalable infrastructure. Your team stops fighting Kubernetes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Solution 2: IaC -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="mb-6">
+                        <div class="inline-block bg-emerald-500 text-white p-3 rounded-lg">
+                            <i class="fas fa-code text-2xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Infrastructure as Code</h3>
+                    <p class="text-slate-300 mb-6">
+                        Your infrastructure lives in the console. Or worse, it's a Terraform mess with no documentation.
+                    </p>
+                    <p class="text-slate-400 mb-6">
+                        We rebuild your entire AWS footprint as code. Every resource is version-controlled, auditable, and repeatable. We use Terraform or CDK depending on your stack and pain points.
+                    </p>
+                    <div class="pt-4 border-t border-slate-700">
+                        <p class="text-emerald-400 font-semibold">
+                            <i class="fas fa-arrow-right"></i> Outcome: Version-controlled infrastructure. Fewer surprises.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Solution 3: CI/CD -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+                    <div class="mb-6">
+                        <div class="inline-block bg-emerald-500 text-white p-3 rounded-lg">
+                            <i class="fas fa-rocket text-2xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">CI/CD Optimization</h3>
+                    <p class="text-slate-300 mb-6">
+                        Your build takes 45 minutes. Your tests are flaky. Developers are waiting.
+                    </p>
+                    <p class="text-slate-400 mb-6">
+                        We redesign your CI/CD pipeline for speed and reliability. We target the "15-minute build"—the point where deployment friction disappears.
+                    </p>
+                    <div class="pt-4 border-t border-slate-700">
+                        <p class="text-emerald-400 font-semibold">
+                            <i class="fas fa-arrow-right"></i> Outcome: Faster deploys. More frequent releases. Developers happy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="py-20 md:py-32 bg-slate-950 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-6">
+                Who We Work <span class="accent-text">With</span>
+            </h2>
+
+            <p class="text-center text-lg text-slate-300 mb-16">
+                Series A/B startups and SMBs ready to modernize without the overhead of hiring.
+            </p>
+
+            <!-- Testimonials -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <!-- Testimonial 1 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="flex space-x-1">
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-slate-200 mb-4 italic">
+                        "DevOpsMercs came in, diagnosed our infrastructure mess in two days, and handed us a rock-solid Terraform foundation. Three months later, our cloud bill dropped 35%, and deployment time went from 90 minutes to 12 minutes. We'd have paid double."
+                    </p>
+                    <p class="text-slate-400 font-semibold">CTO, Series B SaaS Company</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-slate-800 p-8 rounded-lg border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="flex space-x-1">
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                            <i class="fas fa-star text-emerald-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-slate-200 mb-4 italic">
+                        "We were terrified of Kubernetes. After working with DevOpsMercs, our team is confident operating EKS. They didn't just implement it; they taught us how to own it."
+                    </p>
+                    <p class="text-slate-400 font-semibold">VP Engineering, Fintech Startup</p>
+                </div>
+            </div>
+
+            <!-- Company Types -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 flex items-center gap-4">
+                    <div class="text-2xl accent-text">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Fast-Growing SaaS Startups</h4>
+                        <p class="text-slate-400 text-sm">Scale AWS without hiring full-time yet.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 flex items-center gap-4">
+                    <div class="text-2xl accent-text">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Kubernetes Migrants</h4>
+                        <p class="text-slate-400 text-sm">Expert guidance for EKS migration.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 flex items-center gap-4">
+                    <div class="text-2xl accent-text">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">ClickOps Teams</h4>
+                        <p class="text-slate-400 text-sm">Ready for Infrastructure as Code.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 flex items-center gap-4">
+                    <div class="text-2xl accent-text">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">Cloud Cost Optimization</h4>
+                        <p class="text-slate-400 text-sm">Control runaway AWS bills.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 md:py-32 bg-slate-900 border-t border-slate-800">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                Common <span class="accent-text">Questions</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">Why hire DevOpsMercs instead of a full-time DevOps engineer?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>You should do both—eventually. Right now, you need speed and expertise without the $250K annual commitment. We come in, execute high-impact changes, and stabilize your environment. You get the benefit of a senior DevOps engineer without the full-time cost. If you later hire a full-time engineer, we'll make sure they inherit a clean, documented system.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">How long does a typical engagement take?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>Depends on scope. A CI/CD pipeline overhaul might be 4–6 weeks. A full EKS migration and infrastructure rebuild could be 8–12 weeks. We'll give you a clear timeline and fixed quote upfront—no surprises.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">Do you offer 24/7 support after the work is done?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>No. We're not your on-call team. What we do is build you a rock-solid foundation so you don't need 24/7 support. Your infrastructure will be stable, well-documented, and repeatable. If issues arise, you call us, and we fix them. But we're not replacing a full ops team.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">What if we're just getting started with AWS?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>We can work with you. But we're most efficient when you already have some infrastructure in place and you're looking to stabilize, scale, or optimize it. If you're pre-MVP and need guidance on initial architecture, we can help—but that's a different engagement than our core specialties.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">Can you work with our existing DevOps team?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>Yes. We often come in to augment small teams, handle a specific project, or mentor junior engineers. We're collaborative and leave documentation and training behind.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item">
+                    <button class="faq-button w-full text-left py-6 flex justify-between items-center hover:text-emerald-400">
+                        <span class="text-lg font-semibold">What's your tech stack?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="pb-6 text-slate-300">
+                            <p>AWS (EC2, RDS, S3, Lambda, VPC, IAM), Kubernetes (EKS), Terraform, AWS CDK, Docker, GitHub Actions, GitLab CI, and common monitoring/observability tools. If your stack is different, let's talk—but we're laser-focused on these technologies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section id="cta" class="py-20 md:py-32 bg-slate-950 border-t border-slate-800 relative overflow-hidden">
+        <!-- Background accent -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, #10b981 0%, transparent 70%);"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-6">
+                Ready to Stop Wasting Time and Money on Infrastructure?
+            </h2>
+
+            <p class="text-center text-lg text-slate-300 mb-12">
+                Your cloud should work <em>for</em> you, not against you. Book a 30-minute strategy session with no charge and no obligation.
+            </p>
+
+            <div class="bg-slate-800 p-8 rounded-lg border border-slate-700 mb-12">
+                <h3 class="text-xl font-bold mb-6">We'll:</h3>
+                <ul class="space-y-4 text-slate-300">
+                    <li class="flex items-start gap-3">
+                        <span class="accent-text font-bold">1.</span>
+                        <span><strong>Audit your current setup</strong> (no judgment).</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="accent-text font-bold">2.</span>
+                        <span><strong>Identify quick wins</strong> (things we could fix in days, not months).</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="accent-text font-bold">3.</span>
+                        <span><strong>Show you the financial impact</strong> (how much you could save, how much faster you could ship).</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="accent-text font-bold">4.</span>
+                        <span><strong>Outline a clear path forward</strong> (no sales pitch—just facts).</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <a href="mailto:hello@devopsmercs.com" class="cta-button inline-block px-10 py-4 rounded-lg font-bold text-white mb-6 text-lg">Schedule Your Discovery Call</a>
+                <p class="text-slate-400">Or email us at <span class="accent-text">hello@devopsmercs.com</span></p>
+                <p class="text-slate-500 text-sm mt-4">We respond within 24 hours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 accent-text">DevOpsMercs</h4>
+                    <p class="text-slate-400">Elite Infrastructure. No BS.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="#solutions" class="hover:text-emerald-400 transition">Solutions</a></li>
+                        <li><a href="#faq" class="hover:text-emerald-400 transition">FAQ</a></li>
+                        <li><a href="#cta" class="hover:text-emerald-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <p class="text-slate-400">hello@devopsmercs.com</p>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8">
+                <p class="text-center text-slate-500">© 2025 DevOpsMercs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vanilla JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // FAQ Accordion
+        const faqButtons = document.querySelectorAll('.faq-button');
+
+        faqButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.closest('.faq-item');
+                const faqContent = faqItem.querySelector('.faq-content');
+                const isOpen = faqContent.classList.contains('open');
+
+                // Close all other FAQs
+                document.querySelectorAll('.faq-content').forEach(content => {
+                    content.classList.remove('open');
+                });
+
+                document.querySelectorAll('.faq-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Toggle current FAQ
+                if (!isOpen) {
+                    faqContent.classList.add('open');
+                    button.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
