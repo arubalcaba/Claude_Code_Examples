@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coral': '#FF6B6B',
+                        'coral-light': '#FF8A8A',
+                        'coral-dark': '#FF4757',
+                        'purple': '#6C5CE7',
+                        'purple-light': '#A29BFE',
+                        'purple-dark': '#5F3DC4',
+                        'yellow': '#FDCB6E',
+                        'yellow-light': '#FEE2A3',
+                        'green': '#00B894',
+                        'green-light': '#00CCA3',
+                        'light-gray': '#F8F9FA',
+                        'medium-gray': '#E9ECEF',
+                        'dark-gray': '#6C757D',
+                        'charcoal': '#343A40',
+                        'black': '#212529'
+                    },
+                    fontFamily: {
+                        'primary': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    spacing: {
+                        '1': '4px',
+                        '2': '8px',
+                        '4': '16px',
+                        '6': '24px',
+                        '8': '32px',
+                        '12': '48px',
+                        '16': '64px'
+                    },
+                    borderRadius: {
+                        'xl': '20px',
+                        '2xl': '24px',
+                        'full': '9999px'
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'sm': '0 2px 8px rgba(0, 0, 0, 0.04)',
+                        'lg': '0 8px 32px rgba(0, 0, 0, 0.12)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #DDA0DD 0%, #E6E6FA 100%);
+            min-height: 100vh;
+        }
+        
+        .todo-complete {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8A8A 100%);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #DC3545 0%, #FF4757 100%);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+        
+        .todo-card {
+            animation: slideIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #E9ECEF;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .checkbox:checked {
+            background: linear-gradient(135deg, #00B894 0%, #00CCA3 100%);
+            border-color: #00B894;
+        }
+        
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .input-field {
+            border: 2px solid #E9ECEF;
+            border-radius: 16px;
+            padding: 16px 20px;
+            font-size: 16px;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-200 to-purple-100 min-h-screen">
+    <div class="max-w-sm mx-auto p-4 min-h-screen">
+        <!-- Header Card -->
+        <div class="card p-6 mb-6 text-center">
+            <h1 class="text-3xl font-bold text-charcoal leading-tight mb-2">My Tasks</h1>
+            <p class="text-sm text-dark-gray leading-normal" id="taskCounter">0 tasks remaining</p>
+        </div>
+        
+        <!-- Add Todo Card -->
+        <div class="card p-6 mb-6">
+            <form id="todoForm" class="space-y-4">
+                <div>
+                    <label for="todoInput" class="block text-base font-medium text-charcoal mb-2">Add new task</label>
+                    <input 
+                        type="text" 
+                        id="todoInput" 
+                        class="input-field w-full text-charcoal"
+                        placeholder="What needs to be done?"
+                        required
+                    >
+                </div>
+                <button 
+                    type="submit" 
+                    class="btn-primary w-full h-12 text-white font-semibold rounded-full uppercase tracking-wide text-sm"
+                >
+                    Add Task
+                </button>
+            </form>
+        </div>
+        
+        <!-- Todo List Container -->
+        <div id="todoList" class="space-y-4">
+            <!-- Todo items will be inserted here -->
+        </div>
+        
+        <!-- Empty State Card (hidden by default) -->
+        <div id="emptyState" class="card p-8 text-center hidden">
+            <div class="text-6xl mb-4">🎉</div>
+            <h3 class="text-xl font-semibold text-charcoal mb-2">All done!</h3>
+            <p class="text-sm text-dark-gray leading-relaxed">You've completed all your tasks. Time to add some new ones!</p>
+        </div>
+    </div>
+
+    <script>
+        class TodoApp {
+            constructor() {
+                this.todos = [];
+                this.todoForm = document.getElementById('todoForm');
+                this.todoInput = document.getElementById('todoInput');
+                this.todoList = document.getElementById('todoList');
+                this.taskCounter = document.getElementById('taskCounter');
+                this.emptyState = document.getElementById('emptyState');
+                
+                this.initEventListeners();
+                this.updateDisplay();
+            }
+            
+            initEventListeners() {
+                this.todoForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addTodo();
+                });
+            }
+            
+            addTodo() {
+                const text = this.todoInput.value.trim();
+                if (!text) return;
+                
+                const todo = {
+                    id: Date.now(),
+                    text: text,
+                    completed: false
+                };
+                
+                this.todos.push(todo);
+                this.todoInput.value = '';
+                this.updateDisplay();
+            }
+            
+            deleteTodo(id) {
+                this.todos = this.todos.filter(todo => todo.id !== id);
+                this.updateDisplay();
+            }
+            
+            toggleTodo(id) {
+                const todo = this.todos.find(todo => todo.id === id);
+                if (todo) {
+                    todo.completed = !todo.completed;
+                    this.updateDisplay();
+                }
+            }
+            
+            updateDisplay() {
+                this.renderTodos();
+                this.updateCounter();
+                this.toggleEmptyState();
+            }
+            
+            renderTodos() {
+                this.todoList.innerHTML = '';
+                
+                this.todos.forEach(todo => {
+                    const todoCard = this.createTodoCard(todo);
+                    this.todoList.appendChild(todoCard);
+                });
+            }
+            
+            createTodoCard(todo) {
+                const card = document.createElement('div');
+                card.className = 'card todo-card p-6';
+                
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <input 
+                            type="checkbox" 
+                            class="checkbox flex-shrink-0"
+                            ${todo.completed ? 'checked' : ''}
+                            onchange="todoApp.toggleTodo(${todo.id})"
+                        >
+                        <div class="flex-1">
+                            <p class="text-base text-charcoal leading-normal ${todo.completed ? 'todo-complete' : ''}" style="word-break: break-word;">
+                                ${this.escapeHtml(todo.text)}
+                            </p>
+                        </div>
+                        <button 
+                            class="btn-delete flex-shrink-0 w-12 h-12 rounded-full text-white font-semibold"
+                            onclick="todoApp.deleteTodo(${todo.id})"
+                            title="Delete task"
+                        >
+                            ×
+                        </button>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            updateCounter() {
+                const remaining = this.todos.filter(todo => !todo.completed).length;
+                const total = this.todos.length;
+                
+                if (total === 0) {
+                    this.taskCounter.textContent = 'No tasks yet';
+                } else if (remaining === 0) {
+                    this.taskCounter.textContent = 'All tasks completed!';
+                } else if (remaining === 1) {
+                    this.taskCounter.textContent = '1 task remaining';
+                } else {
+                    this.taskCounter.textContent = `${remaining} tasks remaining`;
+                }
+            }
+            
+            toggleEmptyState() {
+                if (this.todos.length === 0) {
+                    this.todoList.classList.add('hidden');
+                    this.emptyState.classList.remove('hidden');
+                } else {
+                    this.todoList.classList.remove('hidden');
+                    this.emptyState.classList.add('hidden');
+                }
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+        
+        // Initialize the app
+        const todoApp = new TodoApp();
+    </script>
+</body>
+</html>

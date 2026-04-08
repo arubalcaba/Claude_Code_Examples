@@ -1,0 +1,272 @@
+{
+  "designSystem": {
+    "name": "Financial Mobile App Design System",
+    "version": "1.0.0",
+    "description": "A modern, clean design system for financial mobile applications with gradient backgrounds and card-based layouts",
+    
+    "colors": {
+      "primary": {
+        "coral": "#FF6B6B",
+        "coralLight": "#FF8A8A",
+        "coralDark": "#FF4757"
+      },
+      "secondary": {
+        "purple": "#6C5CE7",
+        "purpleLight": "#A29BFE",
+        "purpleDark": "#5F3DC4"
+      },
+      "accent": {
+        "yellow": "#FDCB6E",
+        "yellowLight": "#FEE2A3",
+        "green": "#00B894",
+        "greenLight": "#00CCA3"
+      },
+      "neutral": {
+        "white": "#FFFFFF",
+        "lightGray": "#F8F9FA",
+        "mediumGray": "#E9ECEF",
+        "darkGray": "#6C757D",
+        "charcoal": "#343A40",
+        "black": "#212529"
+      },
+      "gradients": {
+        "primaryBackground": "linear-gradient(135deg, #DDA0DD 0%, #E6E6FA 100%)",
+        "secondaryBackground": "linear-gradient(135deg, #F0F8FF 0%, #E0F6FF 100%)",
+        "accentBackground": "linear-gradient(135deg, #FFFACD 0%, #FFF8DC 100%)"
+      },
+      "semantic": {
+        "success": "#28A745",
+        "warning": "#FFC107",
+        "error": "#DC3545",
+        "info": "#17A2B8"
+      }
+    },
+
+    "typography": {
+      "fontFamily": {
+        "primary": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+      },
+      "fontSize": {
+        "xs": "12px",
+        "sm": "14px",
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px",
+        "3xl": "30px",
+        "4xl": "36px"
+      },
+      "fontWeight": {
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      },
+      "lineHeight": {
+        "tight": "1.2",
+        "normal": "1.5",
+        "relaxed": "1.8"
+      },
+      "hierarchy": {
+        "h1": {
+          "fontSize": "30px",
+          "fontWeight": "700",
+          "lineHeight": "1.2",
+          "color": "charcoal"
+        },
+        "h2": {
+          "fontSize": "24px",
+          "fontWeight": "600",
+          "lineHeight": "1.3",
+          "color": "charcoal"
+        },
+        "h3": {
+          "fontSize": "20px",
+          "fontWeight": "600",
+          "lineHeight": "1.4",
+          "color": "charcoal"
+        },
+        "body": {
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "1.5",
+          "color": "charcoal"
+        },
+        "caption": {
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "1.4",
+          "color": "darkGray"
+        },
+        "small": {
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "1.3",
+          "color": "darkGray"
+        }
+      }
+    },
+
+    "spacing": {
+      "scale": "4pt",
+      "tokens": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px",
+        "2xl": "48px",
+        "3xl": "64px"
+      },
+      "semantic": {
+        "componentPadding": "16px",
+        "cardPadding": "20px",
+        "sectionGap": "24px",
+        "elementGap": "8px",
+        "tightGap": "4px"
+      }
+    },
+
+    "layout": {
+      "container": {
+        "maxWidth": "375px",
+        "padding": "16px",
+        "margin": "0 auto"
+      },
+      "grid": {
+        "columns": 12,
+        "gap": "16px"
+      },
+      "breakpoints": {
+        "mobile": "375px",
+        "tablet": "768px",
+        "desktop": "1024px"
+      }
+    },
+
+    "components": {
+      "card": {
+        "background": "white",
+        "borderRadius": "20px",
+        "padding": "20px",
+        "shadow": "0 4px 20px rgba(0, 0, 0, 0.08)",
+        "border": "none"
+      },
+      
+      "button": {
+        "primary": {
+          "background": "linear-gradient(135deg, #FF6B6B 0%, #FF8A8A 100%)",
+          "color": "white",
+          "borderRadius": "25px",
+          "padding": "16px 32px",
+          "fontSize": "16px",
+          "fontWeight": "600",
+          "border": "none",
+          "minHeight": "48px",
+          "textTransform": "uppercase",
+          "letterSpacing": "0.5px"
+        },
+        "secondary": {
+          "background": "transparent",
+          "color": "charcoal",
+          "borderRadius": "25px",
+          "padding": "16px 32px",
+          "fontSize": "16px",
+          "fontWeight": "500",
+          "border": "2px solid #E9ECEF",
+          "minHeight": "48px"
+        }
+      },
+
+      "progressBar": {
+        "height": "8px",
+        "borderRadius": "4px",
+        "background": "#E9ECEF",
+        "fill": "#00B894"
+      },
+
+      "bottomNavigation": {
+        "height": "80px",
+        "background": "white",
+        "borderTop": "1px solid #E9ECEF",
+        "padding": "8px 16px"
+      },
+
+      "navigationItem": {
+        "padding": "8px",
+        "borderRadius": "8px",
+        "iconSize": "24px",
+        "fontSize": "12px",
+        "activeColor": "charcoal",
+        "inactiveColor": "darkGray"
+      },
+
+      "amountDisplay": {
+        "fontSize": "36px",
+        "fontWeight": "700",
+        "color": "charcoal",
+        "lineHeight": "1.1"
+      },
+
+      "categoryCircle": {
+        "size": "60px",
+        "borderRadius": "50%",
+        "border": "4px solid",
+        "background": "white",
+        "iconSize": "24px"
+      },
+
+      "activityItem": {
+        "padding": "16px 0",
+        "borderBottom": "1px solid #F8F9FA",
+        "iconSize": "40px",
+        "iconBackground": "lightGray",
+        "iconBorderRadius": "50%"
+      }
+    },
+
+    "shadows": {
+      "sm": "0 2px 8px rgba(0, 0, 0, 0.04)",
+      "md": "0 4px 20px rgba(0, 0, 0, 0.08)",
+      "lg": "0 8px 32px rgba(0, 0, 0, 0.12)",
+      "xl": "0 16px 48px rgba(0, 0, 0, 0.16)"
+    },
+
+    "borderRadius": {
+      "sm": "8px",
+      "md": "12px",
+      "lg": "16px",
+      "xl": "20px",
+      "2xl": "24px",
+      "full": "9999px"
+    },
+
+    "animations": {
+      "duration": {
+        "fast": "200ms",
+        "normal": "300ms",
+        "slow": "500ms"
+      },
+      "easing": {
+        "ease": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "easeIn": "cubic-bezier(0.4, 0, 1, 1)",
+        "easeOut": "cubic-bezier(0, 0, 0.2, 1)"
+      }
+    },
+
+    "patterns": {
+      "cardLayout": {
+        "description": "Primary layout pattern using white cards on gradient backgrounds",
+        "structure": "gradient background + white rounded cards with subtle shadows"
+      },
+      "financialDisplay": {
+        "description": "Large monetary amounts with smaller descriptive text below",
+        "hierarchy": "large bold amount + small gray label"
+      },
+      "categoryProgress": {
+        "description": "Circular progress indicators with icons for spending categories",
+        "elements": "colored circle + icon + amount + progress indicator"
+      }
+    }
+  }
+}

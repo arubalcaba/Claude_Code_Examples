@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom gradients based on design system */
+        .gradient-primary {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8A8A 100%);
+        }
+        .gradient-secondary {
+            background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+        }
+        .gradient-accent {
+            background: linear-gradient(135deg, #FDCB6E 0%, #FEE2A3 100%);
+        }
+        .gradient-coral-purple {
+            background: linear-gradient(135deg, #FF6B6B 0%, #6C5CE7 100%);
+        }
+        .gradient-purple-yellow {
+            background: linear-gradient(135deg, #6C5CE7 0%, #FDCB6E 100%);
+        }
+        .gradient-coral-yellow {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FDCB6E 100%);
+        }
+        .gradient-rainbow {
+            background: linear-gradient(135deg, #FF6B6B 0%, #6C5CE7 50%, #FDCB6E 100%);
+        }
+        .gradient-subtle {
+            background: linear-gradient(135deg, #FEE2A3 0%, #A29BFE 100%);
+        }
+        
+        /* Animation classes */
+        .bounce-in {
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+            }
+        }
+        
+        .wiggle {
+            animation: wiggle 0.5s ease-in-out;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+        
+        /* Custom checkbox styling */
+        .custom-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B 0%, #6C5CE7 100%);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-checkbox:checked {
+            background: linear-gradient(135deg, #00B894 0%, #00CCA3 100%);
+        }
+        
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        /* Priority indicator styles */
+        .priority-high { border-left: 4px solid #FF4757; }
+        .priority-medium { border-left: 4px solid #FDCB6E; }
+        .priority-low { border-left: 4px solid #00B894; }
+        
+        /* Hover effects */
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Glass morphism effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="gradient-rainbow min-h-screen font-sans">
+    <!-- Container with max-width matching design system -->
+    <div class="max-w-sm mx-auto min-h-screen relative">
+        <!-- Header with gradient background -->
+        <header class="glass-card rounded-b-3xl p-6 mb-6 pulse-glow">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-4 gradient-coral-purple rounded-full flex items-center justify-center bounce-in">
+                    <i class="fas fa-check-double text-white text-2xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Todo Magic</h1>
+                <p class="text-white opacity-90 text-sm">Make every task sparkle ✨</p>
+            </div>
+        </header>
+
+        <!-- Add Todo Section -->
+        <div class="px-4 mb-6">
+            <div class="glass-card rounded-2xl p-6 hover-lift">
+                <h2 class="text-xl font-semibold text-white mb-4">Add New Task</h2>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="todoInput" 
+                            placeholder="What needs to be done?"
+                            class="w-full p-4 rounded-2xl border-none bg-white/30 backdrop-blur-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
+                        >
+                    </div>
+                    
+                    <!-- Priority Selection -->
+                    <div class="flex gap-2">
+                        <button class="priority-btn flex-1 p-3 rounded-xl gradient-primary text-white font-medium transition-all duration-200 hover:scale-105" data-priority="high">
+                            <i class="fas fa-fire mr-2"></i>High
+                        </button>
+                        <button class="priority-btn flex-1 p-3 rounded-xl gradient-accent text-white font-medium transition-all duration-200 hover:scale-105" data-priority="medium">
+                            <i class="fas fa-star mr-2"></i>Medium
+                        </button>
+                        <button class="priority-btn flex-1 p-3 rounded-xl gradient-secondary text-white font-medium transition-all duration-200 hover:scale-105" data-priority="low">
+                            <i class="fas fa-leaf mr-2"></i>Low
+                        </button>
+                    </div>
+                    
+                    <button 
+                        id="addBtn" 
+                        class="w-full p-4 gradient-coral-purple text-white font-semibold rounded-2xl hover:scale-105 transition-all duration-300 min-h-12"
+                    >
+                        <i class="fas fa-plus mr-2"></i>Add Task
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="px-4 mb-6">
+            <div class="glass-card rounded-2xl p-4 hover-lift">
+                <div class="flex justify-between items-center">
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 mx-auto mb-2 gradient-primary rounded-full flex items-center justify-center">
+                            <span id="totalCount" class="text-white font-bold">0</span>
+                        </div>
+                        <p class="text-white text-xs font-medium">Total</p>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 mx-auto mb-2 gradient-accent rounded-full flex items-center justify-center">
+                            <span id="completedCount" class="text-white font-bold">0</span>
+                        </div>
+                        <p class="text-white text-xs font-medium">Done</p>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 mx-auto mb-2 gradient-secondary rounded-full flex items-center justify-center">
+                            <span id="pendingCount" class="text-white font-bold">0</span>
+                        </div>
+                        <p class="text-white text-xs font-medium">Pending</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="px-4 mb-6">
+            <div class="flex gap-2">
+                <button class="filter-btn flex-1 p-3 rounded-xl glass-card text-white font-medium transition-all duration-200 hover:scale-105 active" data-filter="all">
+                    All
+                </button>
+                <button class="filter-btn flex-1 p-3 rounded-xl glass-card text-white font-medium transition-all duration-200 hover:scale-105" data-filter="pending">
+                    Pending
+                </button>
+                <button class="filter-btn flex-1 p-3 rounded-xl glass-card text-white font-medium transition-all duration-200 hover:scale-105" data-filter="completed">
+                    Completed
+                </button>
+            </div>
+        </div>
+
+        <!-- Todo List -->
+        <div class="px-4 pb-8">
+            <div id="todoList" class="space-y-4">
+                <!-- Todo items will be inserted here -->
+            </div>
+            
+            <!-- Empty state -->
+            <div id="emptyState" class="text-center py-12">
+                <div class="w-20 h-20 mx-auto mb-4 gradient-subtle rounded-full flex items-center justify-center opacity-70">
+                    <i class="fas fa-clipboard-list text-white text-3xl"></i>
+                </div>
+                <p class="text-white opacity-80 text-lg font-medium">No tasks yet!</p>
+                <p class="text-white opacity-60 text-sm mt-2">Add your first task to get started</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App state
+        let todos = [];
+        let currentFilter = 'all';
+        let selectedPriority = 'medium';
+        let todoIdCounter = 1;
+
+        // DOM elements
+        const todoInput = document.getElementById('todoInput');
+        const addBtn = document.getElementById('addBtn');
+        const todoList = document.getElementById('todoList');
+        const emptyState = document.getElementById('emptyState');
+        const totalCount = document.getElementById('totalCount');
+        const completedCount = document.getElementById('completedCount');
+        const pendingCount = document.getElementById('pendingCount');
+        const priorityButtons = document.querySelectorAll('.priority-btn');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // Initialize app
+        function init() {
+            updateStats();
+            renderTodos();
+            
+            // Event listeners
+            addBtn.addEventListener('click', addTodo);
+            todoInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTodo();
+            });
+            
+            // Priority selection
+            priorityButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    priorityButtons.forEach(b => b.classList.remove('scale-110', 'ring-2', 'ring-white'));
+                    btn.classList.add('scale-110', 'ring-2', 'ring-white');
+                    selectedPriority = btn.dataset.priority;
+                });
+            });
+            
+            // Filter buttons
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active', 'gradient-coral-purple'));
+                    btn.classList.add('active', 'gradient-coral-purple');
+                    currentFilter = btn.dataset.filter;
+                    renderTodos();
+                });
+            });
+            
+            // Set default priority selection
+            priorityButtons[1].classList.add('scale-110', 'ring-2', 'ring-white');
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (!text) {
+                // Wiggle animation for empty input
+                todoInput.classList.add('wiggle');
+                setTimeout(() => todoInput.classList.remove('wiggle'), 500);
+                return;
+            }
+
+            const todo = {
+                id: todoIdCounter++,
+                text,
+                completed: false,
+                priority: selectedPriority,
+                createdAt: new Date()
+            };
+
+            todos.unshift(todo);
+            todoInput.value = '';
+            
+            // Add bounce animation to add button
+            addBtn.classList.add('bounce-in');
+            setTimeout(() => addBtn.classList.remove('bounce-in'), 500);
+            
+            updateStats();
+            renderTodos();
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                updateStats();
+                renderTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            updateStats();
+            renderTodos();
+        }
+
+        function updateStats() {
+            const total = todos.length;
+            const completed = todos.filter(t => t.completed).length;
+            const pending = total - completed;
+            
+            totalCount.textContent = total;
+            completedCount.textContent = completed;
+            pendingCount.textContent = pending;
+        }
+
+        function renderTodos() {
+            let filteredTodos = todos;
+            
+            if (currentFilter === 'completed') {
+                filteredTodos = todos.filter(t => t.completed);
+            } else if (currentFilter === 'pending') {
+                filteredTodos = todos.filter(t => !t.completed);
+            }
+            
+            if (filteredTodos.length === 0) {
+                todoList.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            todoList.style.display = 'block';
+            emptyState.style.display = 'none';
+            
+            todoList.innerHTML = filteredTodos.map(todo => `
+                <div class="glass-card rounded-2xl p-4 hover-lift slide-up priority-${todo.priority} ${todo.completed ? 'opacity-75' : ''}" data-todo-id="${todo.id}">
+                    <div class="flex items-start gap-4">
+                        <input 
+                            type="checkbox" 
+                            class="custom-checkbox mt-1" 
+                            ${todo.completed ? 'checked' : ''}
+                            onchange="toggleTodo(${todo.id})"
+                        >
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white font-medium ${todo.completed ? 'line-through opacity-60' : ''} break-words">
+                                ${todo.text}
+                            </p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white bg-white/20">
+                                    ${todo.priority === 'high' ? '<i class="fas fa-fire mr-1"></i>High' : 
+                                      todo.priority === 'medium' ? '<i class="fas fa-star mr-1"></i>Medium' : 
+                                      '<i class="fas fa-leaf mr-1"></i>Low'}
+                                </span>
+                                <span class="text-white/60 text-xs">
+                                    ${todo.createdAt.toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                        <button 
+                            onclick="deleteTodo(${todo.id})"
+                            class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center hover:scale-110 transition-all duration-200 flex-shrink-0"
+                        >
+                            <i class="fas fa-trash text-white text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
