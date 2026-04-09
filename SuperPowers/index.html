@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallax — Vision Beyond Pixels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* ======= RESET & DESIGN TOKENS ======= */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #0d1117;
+      --accent: #00e5ff;
+      --text-primary: #ffffff;
+      --text-secondary: #8892a4;
+      --text-tertiary: #c0c0d0;
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --border-accent: rgba(0, 229, 255, 0.13);
+      --border-accent-hover: rgba(0, 229, 255, 0.27);
+      --radius: 8px;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+    }
+
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .section-label {
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .section-heading {
+      color: var(--text-primary);
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* ======= NAVIGATION ======= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      background: transparent;
+      font-family: var(--font-body);
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--text-primary);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .nav-mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 99;
+    }
+
+    .nav-mobile-menu.open { display: flex; }
+
+    .nav-mobile-menu a {
+      font-size: 16px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ======= HERO ======= */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, transparent 40%, var(--bg) 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: var(--text-primary);
+      text-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+      margin-bottom: 16px;
+    }
+
+    .hero-tagline {
+      font-size: 16px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      margin-bottom: 40px;
+      text-transform: uppercase;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      pointer-events: auto;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      padding: 12px 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+      background: transparent;
+      font-family: var(--font-body);
+      text-shadow: none;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+    }
+
+    /* ======= CAPABILITIES ======= */
+    .capabilities {
+      padding: 120px 40px;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .capability-card {
+      background: var(--surface);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .capability-card:hover {
+      border-color: var(--border-accent-hover);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+    }
+
+    .capability-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05), rgba(0, 229, 255, 0.12));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .capability-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .capability-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .capability-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ======= GALLERY ======= */
+    .gallery {
+      padding: 80px 40px 120px;
+    }
+
+    .gallery-items {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      background: linear-gradient(135deg, var(--surface), #0a1628);
+      border: 1px solid rgba(0, 229, 255, 0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-image {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .gallery-image-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: rgba(0, 229, 255, 0.15);
+    }
+
+    .gallery-dither-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        repeating-conic-gradient(rgba(0, 229, 255, 0.06) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+      pointer-events: none;
+    }
+
+    .gallery-item-text {
+      padding: 20px 24px;
+    }
+
+    .gallery-item-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .gallery-item-text p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ======= TESTIMONIALS ======= */
+    .testimonials {
+      padding: 80px 40px 120px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .testimonial-quote-mark {
+      font-size: 32px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 12px;
+      animation: quoteGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes quoteGlow {
+      0%, 100% { text-shadow: 0 0 8px rgba(0, 229, 255, 0.2); }
+      50% { text-shadow: 0 0 16px rgba(0, 229, 255, 0.5); }
+    }
+
+    .testimonial-text {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin-bottom: 16px;
+    }
+
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .testimonial-role {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ======= CTA FOOTER ======= */
+    .cta-section {
+      padding: 100px 40px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta-dither-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        repeating-conic-gradient(rgba(0, 229, 255, 0.02) 0% 25%, transparent 0% 50%) 0 0 / 6px 6px;
+      pointer-events: none;
+      animation: ditherShift 8s linear infinite;
+    }
+
+    @keyframes ditherShift {
+      0% { background-position: 0 0; }
+      100% { background-position: 6px 6px; }
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-heading {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .cta-subtext {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+
+    .cta-btn-primary {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      padding: 12px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+      background: transparent;
+      font-family: var(--font-body);
+    }
+
+    .cta-btn-primary:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+    }
+
+    .cta-btn-secondary {
+      font-size: 14px;
+      color: var(--text-secondary);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.3s, color 0.3s;
+      background: transparent;
+      font-family: var(--font-body);
+    }
+
+    .cta-btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ======= RESPONSIVE ======= */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .hero-title { font-size: 32px; letter-spacing: 4px; }
+      .hero-tagline { font-size: 13px; letter-spacing: 2px; }
+
+      .capabilities { padding: 80px 20px; }
+      .capabilities-grid { grid-template-columns: 1fr; }
+
+      .gallery { padding: 60px 20px 80px; }
+
+      .testimonials { padding: 60px 20px 80px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+
+      .section-heading { font-size: 26px; margin-bottom: 36px; }
+
+      .cta-section { padding: 80px 20px 40px; }
+      .cta-heading { font-size: 26px; }
+
+      .footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======= NAVIGATION ======= -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">PARALLAX</div>
+    <ul class="nav-links">
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+    </ul>
+    <button class="nav-cta">Get Started</button>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a href="#capabilities">Capabilities</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#">Get Started</a>
+  </div>
+
+  <!-- ======= HERO ======= -->
+  <section class="hero" id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-vignette"></div>
+    <div class="hero-content" id="heroContent">
+      <h1 class="hero-title">PARALLAX</h1>
+      <p class="hero-tagline">Vision Beyond Pixels</p>
+      <button class="hero-cta">Get Started</button>
+    </div>
+  </section>
+
+  <!-- ======= CAPABILITIES ======= -->
+  <section class="capabilities" id="capabilities">
+    <p class="section-label">What We Do</p>
+    <h2 class="section-heading">Capabilities</h2>
+    <div class="capabilities-grid">
+      <div class="capability-card">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="8" height="8" rx="1" fill="var(--accent)" opacity="0.8"/>
+            <rect x="13" y="3" width="8" height="8" rx="1" fill="var(--accent)" opacity="0.5"/>
+            <rect x="3" y="13" width="8" height="8" rx="1" fill="var(--accent)" opacity="0.5"/>
+            <rect x="13" y="13" width="8" height="8" rx="1" fill="var(--accent)" opacity="0.3"/>
+          </svg>
+        </div>
+        <h3>Image Synthesis</h3>
+        <p>Generate photorealistic imagery from text descriptions with pixel-level control.</p>
+      </div>
+      <div class="capability-card">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>
+            <circle cx="12" cy="12" r="3.5" fill="var(--accent)" opacity="0.6"/>
+          </svg>
+        </div>
+        <h3>Scene Understanding</h3>
+        <p>Deep semantic parsing of visual scenes — objects, relationships, and context.</p>
+      </div>
+      <div class="capability-card">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 18 L9 10 L14 14 L20 6" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+            <circle cx="9" cy="10" r="2" fill="var(--accent)" opacity="0.4"/>
+            <circle cx="20" cy="6" r="2" fill="var(--accent)" opacity="0.4"/>
+          </svg>
+        </div>
+        <h3>Style Transfer</h3>
+        <p>Apply and blend artistic styles across images while preserving structural integrity.</p>
+      </div>
+      <div class="capability-card">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+          </svg>
+        </div>
+        <h3>Real-Time Processing</h3>
+        <p>Sub-frame latency inference for live video streams and interactive applications.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= GALLERY ======= -->
+  <section class="gallery" id="gallery">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-heading">See What's Possible</h2>
+    <div class="gallery-items">
+      <div class="gallery-item">
+        <div class="gallery-image">
+          <div class="gallery-image-content">&#9683;</div>
+          <div class="gallery-dither-overlay"></div>
+        </div>
+        <div class="gallery-item-text">
+          <h3>Architectural Visualization</h3>
+          <p>Text-to-scene rendering with photorealistic lighting</p>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-image">
+          <div class="gallery-image-content">&#9684;</div>
+          <div class="gallery-dither-overlay"></div>
+        </div>
+        <div class="gallery-item-text">
+          <h3>Portrait Enhancement</h3>
+          <p>AI-driven retouching that preserves natural character</p>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-image">
+          <div class="gallery-image-content">&#9685;</div>
+          <div class="gallery-dither-overlay"></div>
+        </div>
+        <div class="gallery-item-text">
+          <h3>Video Synthesis</h3>
+          <p>Frame-consistent generation for motion content</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= TESTIMONIALS ======= -->
+  <section class="testimonials" id="testimonials">
+    <p class="section-label">Trusted By</p>
+    <h2 class="section-heading">What Teams Are Saying</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote-mark">&ldquo;</div>
+        <p class="testimonial-text">Parallax cut our rendering pipeline from hours to seconds. The quality is indistinguishable from manual work.</p>
+        <div class="testimonial-divider"></div>
+        <div class="testimonial-name">Sarah Chen</div>
+        <div class="testimonial-role">CTO, StudioForge</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote-mark">&ldquo;</div>
+        <p class="testimonial-text">The real-time processing API changed what's possible for our live broadcast platform.</p>
+        <div class="testimonial-divider"></div>
+        <div class="testimonial-name">Marcus Rivera</div>
+        <div class="testimonial-role">VP Engineering, StreamLab</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote-mark">&ldquo;</div>
+        <p class="testimonial-text">Best-in-class scene understanding. We integrated it in a weekend and haven't looked back.</p>
+        <div class="testimonial-divider"></div>
+        <div class="testimonial-name">Aiko Tanaka</div>
+        <div class="testimonial-role">Lead ML Engineer, Voxel</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CTA FOOTER ======= -->
+  <section class="cta-section">
+    <div class="cta-dither-bg"></div>
+    <div class="cta-content">
+      <h2 class="cta-heading">Ready to See Beyond Pixels?</h2>
+      <p class="cta-subtext">Join the teams building the future of computer vision.</p>
+      <div class="cta-buttons">
+        <button class="cta-btn-primary">Get Started</button>
+        <button class="cta-btn-secondary">View Docs</button>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="footer-copy">&copy; 2026 Parallax</div>
+      <div class="footer-links">
+        <a href="#">Twitter</a>
+        <a href="#">GitHub</a>
+        <a href="#">Blog</a>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ======= CDN DEPENDENCIES ======= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- ======= GLSL SHADERS ======= -->
+  <script id="dither-vertex" type="x-shader/x-vertex">
+    varying vec3 vWorldPosition;
+    varying vec3 vNormal;
+    varying vec2 vUv;
+
+    void main() {
+      vUv = uv;
+      vNormal = normalize(normalMatrix * normal);
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vWorldPosition = worldPos.xyz;
+      gl_Position = projectionMatrix * viewMatrix * worldPos;
+    }
+  </script>
+
+  <script id="dither-fragment" type="x-shader/x-fragment">
+    precision highp float;
+
+    uniform float u_time;
+    uniform vec2 u_resolution;
+
+    varying vec3 vWorldPosition;
+    varying vec3 vNormal;
+    varying vec2 vUv;
+
+    // 8x8 Bayer matrix
+    float bayer8(vec2 pos) {
+      int x = int(mod(pos.x, 8.0));
+      int y = int(mod(pos.y, 8.0));
+
+      int index = x + y * 8;
+      float value = 0.0;
+
+      // Bayer 8x8 ordered dither matrix (normalized 0-1)
+      if (index == 0) value = 0.0/64.0;    else if (index == 1) value = 32.0/64.0;
+      else if (index == 2) value = 8.0/64.0;   else if (index == 3) value = 40.0/64.0;
+      else if (index == 4) value = 2.0/64.0;   else if (index == 5) value = 34.0/64.0;
+      else if (index == 6) value = 10.0/64.0;  else if (index == 7) value = 42.0/64.0;
+
+      else if (index == 8) value = 48.0/64.0;  else if (index == 9) value = 16.0/64.0;
+      else if (index == 10) value = 56.0/64.0; else if (index == 11) value = 24.0/64.0;
+      else if (index == 12) value = 50.0/64.0; else if (index == 13) value = 18.0/64.0;
+      else if (index == 14) value = 58.0/64.0; else if (index == 15) value = 26.0/64.0;
+
+      else if (index == 16) value = 12.0/64.0; else if (index == 17) value = 44.0/64.0;
+      else if (index == 18) value = 4.0/64.0;  else if (index == 19) value = 36.0/64.0;
+      else if (index == 20) value = 14.0/64.0; else if (index == 21) value = 46.0/64.0;
+      else if (index == 22) value = 6.0/64.0;  else if (index == 23) value = 38.0/64.0;
+
+      else if (index == 24) value = 60.0/64.0; else if (index == 25) value = 28.0/64.0;
+      else if (index == 26) value = 52.0/64.0; else if (index == 27) value = 20.0/64.0;
+      else if (index == 28) value = 62.0/64.0; else if (index == 29) value = 30.0/64.0;
+      else if (index == 30) value = 54.0/64.0; else if (index == 31) value = 22.0/64.0;
+
+      else if (index == 32) value = 3.0/64.0;  else if (index == 33) value = 35.0/64.0;
+      else if (index == 34) value = 11.0/64.0; else if (index == 35) value = 43.0/64.0;
+      else if (index == 36) value = 1.0/64.0;  else if (index == 37) value = 33.0/64.0;
+      else if (index == 38) value = 9.0/64.0;  else if (index == 39) value = 41.0/64.0;
+
+      else if (index == 40) value = 51.0/64.0; else if (index == 41) value = 19.0/64.0;
+      else if (index == 42) value = 59.0/64.0; else if (index == 43) value = 27.0/64.0;
+      else if (index == 44) value = 49.0/64.0; else if (index == 45) value = 17.0/64.0;
+      else if (index == 46) value = 57.0/64.0; else if (index == 47) value = 25.0/64.0;
+
+      else if (index == 48) value = 15.0/64.0; else if (index == 49) value = 47.0/64.0;
+      else if (index == 50) value = 7.0/64.0;  else if (index == 51) value = 39.0/64.0;
+      else if (index == 52) value = 13.0/64.0; else if (index == 53) value = 45.0/64.0;
+      else if (index == 54) value = 5.0/64.0;  else if (index == 55) value = 37.0/64.0;
+
+      else if (index == 56) value = 63.0/64.0; else if (index == 57) value = 31.0/64.0;
+      else if (index == 58) value = 55.0/64.0; else if (index == 59) value = 23.0/64.0;
+      else if (index == 60) value = 61.0/64.0; else if (index == 61) value = 29.0/64.0;
+      else if (index == 62) value = 53.0/64.0; else if (index == 63) value = 21.0/64.0;
+
+      return value;
+    }
+
+    void main() {
+      // Directional light from upper-right
+      vec3 lightDir = normalize(vec3(0.5, 0.8, 0.6));
+      float diffuse = max(dot(vNormal, lightDir), 0.0);
+      float ambient = 0.15;
+      float brightness = ambient + diffuse * 0.85;
+
+      // Breathing animation on dither threshold
+      float breathe = sin(u_time * 0.5) * 0.08;
+      brightness += breathe;
+
+      // Screen-space dither
+      vec2 screenPos = gl_FragCoord.xy;
+      float threshold = bayer8(screenPos);
+
+      // Cyan color with brightness variation
+      vec3 litColor = vec3(0.0, 0.898, 1.0) * (0.4 + brightness * 0.6);
+      vec3 darkColor = vec3(0.039, 0.039, 0.059);
+
+      vec3 color = brightness > threshold ? litColor : darkColor;
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  </script>
+
+  <script id="points-vertex" type="x-shader/x-vertex">
+    uniform float u_time;
+    attribute float aScale;
+    varying float vAlpha;
+
+    void main() {
+      vAlpha = 0.4 + 0.6 * sin(u_time * 2.0 + position.x * 3.0 + position.y * 5.0);
+      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      gl_PointSize = aScale * (200.0 / -mvPosition.z);
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  </script>
+
+  <script id="points-fragment" type="x-shader/x-fragment">
+    precision highp float;
+    varying float vAlpha;
+
+    void main() {
+      float dist = length(gl_PointCoord - vec2(0.5));
+      if (dist > 0.5) discard;
+      float glow = 1.0 - smoothstep(0.0, 0.5, dist);
+      gl_FragColor = vec4(0.0, 0.898, 1.0, glow * vAlpha);
+    }
+  </script>
+
+  <!-- ======= MAIN SCRIPT ======= -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ======= NAV SCROLL STATE =======
+    const nav = document.getElementById('nav');
+    const hero = document.getElementById('hero');
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    hamburger.addEventListener('click', function() {
+      mobileMenu.classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // ======= THREE.JS HERO SCENE =======
+    const canvas = document.getElementById('hero-canvas');
+    const isMobile = window.innerWidth <= 768;
+    const pixelRatio = Math.min(window.devicePixelRatio, 2);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      antialias: false,
+      alpha: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(pixelRatio);
+    renderer.setClearColor(0x0a0a0f, 1);
+
+    // Scene & Camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 5;
+
+    // Simplex noise (simple 3D hash-based displacement)
+    function pseudoNoise(x, y, z) {
+      var n = Math.sin(x * 12.9898 + y * 78.233 + z * 45.164) * 43758.5453;
+      return (n - Math.floor(n)) * 2.0 - 1.0;
+    }
+
+    // Icosahedron geometry with noise displacement
+    var detailLevel = isMobile ? 2 : 3;
+    var icoGeometry = new THREE.IcosahedronGeometry(1.5, detailLevel);
+    var positions = icoGeometry.attributes.position;
+
+    for (var i = 0; i < positions.count; i++) {
+      var x = positions.getX(i);
+      var y = positions.getY(i);
+      var z = positions.getZ(i);
+      var noise = pseudoNoise(x * 1.5, y * 1.5, z * 1.5) * 0.12;
+      var len = Math.sqrt(x * x + y * y + z * z);
+      positions.setX(i, x + (x / len) * noise);
+      positions.setY(i, y + (y / len) * noise);
+      positions.setZ(i, z + (z / len) * noise);
+    }
+
+    icoGeometry.computeVertexNormals();
+
+    // Dither shader material
+    var ditherMaterial = new THREE.ShaderMaterial({
+      vertexShader: document.getElementById('dither-vertex').textContent,
+      fragmentShader: document.getElementById('dither-fragment').textContent,
+      uniforms: {
+        u_time: { value: 0.0 },
+        u_resolution: { value: new THREE.Vector2(window.innerWidth * pixelRatio, window.innerHeight * pixelRatio) }
+      }
+    });
+
+    var meshSolid = new THREE.Mesh(icoGeometry, ditherMaterial);
+    scene.add(meshSolid);
+
+    // Wireframe layer
+    var edgesGeometry = new THREE.EdgesGeometry(icoGeometry);
+    var wireMaterial = new THREE.LineBasicMaterial({
+      color: 0x00e5ff,
+      transparent: true,
+      opacity: 0.15
+    });
+    var wireframe = new THREE.LineSegments(edgesGeometry, wireMaterial);
+    scene.add(wireframe);
+
+    // Node points at vertices
+    var pointsCount = positions.count;
+    var scaleArray = new Float32Array(pointsCount);
+    for (var i = 0; i < pointsCount; i++) {
+      scaleArray[i] = 0.8 + Math.random() * 0.7;
+    }
+    var pointsGeometry = new THREE.BufferGeometry();
+    pointsGeometry.setAttribute('position', positions.clone());
+    pointsGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
+
+    var pointsMaterial = new THREE.ShaderMaterial({
+      vertexShader: document.getElementById('points-vertex').textContent,
+      fragmentShader: document.getElementById('points-fragment').textContent,
+      uniforms: {
+        u_time: { value: 0.0 }
+      },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+
+    var nodePoints = new THREE.Points(pointsGeometry, pointsMaterial);
+    scene.add(nodePoints);
+
+    // Post-processing: Bloom
+    var composer = new THREE.EffectComposer(renderer);
+    var renderPass = new THREE.RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    var bloomPass = new THREE.UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.4,   // strength
+      0.8,   // radius
+      0.6    // threshold
+    );
+    composer.addPass(bloomPass);
+
+    // Mouse tracking
+    var mouse = { x: 0, y: 0 };
+    var targetRotation = { x: 0, y: 0 };
+    var currentRotation = { x: 0, y: 0 };
+    var maxAngle = 15 * (Math.PI / 180);
+
+    if (!isMobile) {
+      window.addEventListener('mousemove', function(e) {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+      });
+    }
+
+    // Resize handler
+    window.addEventListener('resize', function() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      composer.setSize(w, h);
+      ditherMaterial.uniforms.u_resolution.value.set(w * pixelRatio, h * pixelRatio);
+    });
+
+    // IntersectionObserver — pause rendering when hero is not visible
+    var isHeroVisible = true;
+    var heroObserver = new IntersectionObserver(function(entries) {
+      isHeroVisible = entries[0].isIntersecting;
+    }, { threshold: 0.05 });
+    heroObserver.observe(hero);
+
+    // Animation loop
+    var clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isHeroVisible) return;
+
+      var elapsed = clock.getElapsedTime();
+
+      // Update uniforms
+      ditherMaterial.uniforms.u_time.value = elapsed;
+      pointsMaterial.uniforms.u_time.value = elapsed;
+
+      // Mouse-reactive rotation (or auto-rotate on mobile)
+      if (isMobile) {
+        targetRotation.y = elapsed * 0.1;
+        targetRotation.x = Math.sin(elapsed * 0.05) * 0.15;
+      } else {
+        targetRotation.x = -mouse.y * maxAngle;
+        targetRotation.y = mouse.x * maxAngle;
+      }
+
+      currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
+      currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
+
+      meshSolid.rotation.x = currentRotation.x;
+      meshSolid.rotation.y = currentRotation.y;
+      wireframe.rotation.x = currentRotation.x;
+      wireframe.rotation.y = currentRotation.y;
+      nodePoints.rotation.x = currentRotation.x;
+      nodePoints.rotation.y = currentRotation.y;
+
+      composer.render();
+    }
+
+    animate();
+
+    // ======= GSAP ANIMATIONS =======
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero scroll-out
+    gsap.to('#heroContent', {
+      opacity: 0,
+      y: -60,
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: '80% top',
+        scrub: 1
+      }
+    });
+
+    // Scale mesh down on scroll (via canvas transform)
+    gsap.to('#hero-canvas', {
+      scale: 0.95,
+      scrollTrigger: {
+        trigger: '.hero',
+        start: '50% top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Capabilities cards stagger
+    gsap.from('.capability-card', {
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.capabilities-grid',
+        start: 'top 80%'
+      }
+    });
+
+    // Gallery items with dither reveal
+    document.querySelectorAll('.gallery-item').forEach(function(item, i) {
+      var overlay = item.querySelector('.gallery-dither-overlay');
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: item,
+          start: 'top 80%'
+        }
+      });
+
+      tl.from(item, {
+        y: 30,
+        opacity: 0,
+        duration: 0.5,
+        delay: i * 0.2,
+        ease: 'power2.out'
+      });
+
+      tl.to(overlay, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, '-=0.2');
+    });
+
+    // Testimonials stagger
+    gsap.from('.testimonial-card', {
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.testimonials-grid',
+        start: 'top 80%'
+      }
+    });
+
+    // CTA section
+    gsap.from('.cta-heading', {
+      y: 30,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.cta-section',
+        start: 'top 80%'
+      }
+    });
+
+    gsap.from('.cta-buttons button', {
+      y: 20,
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.cta-section',
+        start: 'top 75%'
+      }
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
